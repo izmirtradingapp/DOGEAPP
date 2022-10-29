@@ -45,7 +45,7 @@ def webhook():
             params = {"symbol":"DOGEUSDT",
                     "type":"MARKET",
                     "side":"BUY",
-                    "quantity":quot,
+                    "quantity":int(quot),
                     "reduceOnly":"false"}    
 
             LongPos = client.futures_create_order(**params)
@@ -66,7 +66,7 @@ def webhook():
   
             
     def ExitLongPosition(client):
-        qty = float(client.futures_position_information(symbol="DOGEUSDT")[0]["positionAmt"])
+        qty = client.futures_position_information(symbol="DOGEUSDT")[0]["positionAmt"]
         params = {
             "symbol":"DOGEUSDT",
             "side":"SELL",
@@ -112,7 +112,7 @@ def webhook():
             params = {"symbol":"DOGEUSDT",
                     "type":"MARKET",
                     "side":"SELL",
-                    "quantity":quot,
+                    "quantity":int(quot),
                     "reduceOnly":"false"}
 
             ShortPos = client.futures_create_order(**params)
@@ -132,7 +132,7 @@ def webhook():
         """
 
     def ExitShortPosition(client):
-        qty = -(float(client.futures_position_information(symbol="DOGEUSDT")[0]["positionAmt"]))
+        qty = -(client.futures_position_information(symbol="DOGEUSDT")[0]["positionAmt"])
         params = {
             "symbol":"DOGEUSDT",
             "side":"BUY",
