@@ -125,13 +125,13 @@ def webhook():
                 quot = math.floor((balance/markPrice)*(50/100)*1000*lev)/1000
             
             
-            """"
+            """
             params = {"symbol":"DOGEUSDT",
                     "type":"MARKET",
                     "side":"SELL",
                     "quantity":int(quot),
                     "reduceOnly":"false"}
-            """"
+            """
             params = {"symbol":"DOGEUSDT",
                 "type":"LIMIT",
                 "side":"SELL",
