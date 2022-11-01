@@ -45,7 +45,7 @@ def webhook():
             if i == 4:
                 quot = math.floor((balance/markPrice)*(50/100)*1000*lev)/1000
             
-            """
+            
             params = {"symbol":"DOGEUSDT",
                     "type":"MARKET",
                     "side":"BUY",
@@ -58,6 +58,7 @@ def webhook():
                       "price":price-fark,
                       "quantity":quot,
                       "timeInForce":"GTC"}
+            """
 
             LongPos = client.futures_create_order(**params)
             
@@ -125,7 +126,7 @@ def webhook():
                 quot = math.floor((balance/markPrice)*(50/100)*1000*lev)/1000
             
             
-            """
+            
             params = {"symbol":"DOGEUSDT",
                     "type":"MARKET",
                     "side":"SELL",
@@ -138,6 +139,7 @@ def webhook():
                 "price":price+fark,
                 "quantity":quot,
                 "timeInForce":"GTC"}
+            """
 
             ShortPos = client.futures_create_order(**params)
         
