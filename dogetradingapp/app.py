@@ -10,7 +10,7 @@ app = Flask(__name__)
 @app.route("/webhook", methods=['POST'])
 def webhook():
 
-    def LongPosition(client,lev,price,fark):
+    def LongPosition(client,lev):
         try:
             ExitShortPosition(client)
         except:
@@ -90,7 +90,7 @@ def webhook():
         ExitLong = client.futures_create_order(**params)
 
 
-    def ShortPosition(client,lev,price,fark):
+    def ShortPosition(client,lev):
         try:
             ExitLongPosition(client)
         except:
@@ -195,8 +195,8 @@ def webhook():
         data = json.loads(request.data)
         order = data["order"]
         lev = data["leverage"]
-        price = float(data["price"])
-        fark = float(data["fark"])
+        #price = float(data["price"])
+        #fark = float(data["fark"])
         api_key = data["api_key"]
         api_secret = data["api_secret"]
         
@@ -204,13 +204,13 @@ def webhook():
         client.futures_change_leverage(**{"symbol":"DOGEUSDT","leverage":lev})
 
         if order == "LongPosition":
-            LongPosition(client,lev,price,fark)
+            LongPosition(client,lev)
 
         elif order == "ExitLongPosition":
             ExitLongPosition(client)
           
         elif order == "ShortPosition":
-            ShortPosition(client,lev,price,fark)
+            ShortPosition(client,lev)
 
         elif order == "ExitShortPosition":
             ExitShortPosition(client)
