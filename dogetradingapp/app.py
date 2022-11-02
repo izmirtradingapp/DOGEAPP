@@ -43,27 +43,27 @@ def webhook():
 
         markPrice = float(client.futures_mark_price(symbol="DOGEBUSD")["markPrice"])
         price = price = get_rounded_price(price*99.9/100)
-        for i in range(99,48,-5):
+       
             
-            quot = math.floor((balance/markPrice)*(i/100)*1000*lev)/1000
-            
-            """
-            params = {"symbol":"DOGEBUSD",
-                    "type":"MARKET",
-                    "side":"BUY",
-                    "quantity":int(quot),
-                    "reduceOnly":"false"} 
-            """
-                
-            params = {"symbol":"DOGEBUSD",
-                      "type":"LIMIT",
-                      "side":"BUY",
-                      "price":price,
-                      "quantity":int(quot),
-                      "timeInForce":"GTC"}
-           
+        quot = math.floor((balance/markPrice)*(80/100)*1000*lev)/1000
 
-            LongPos = client.futures_create_order(**params)
+        """
+        params = {"symbol":"DOGEBUSD",
+                "type":"MARKET",
+                "side":"BUY",
+                "quantity":int(quot),
+                "reduceOnly":"false"} 
+        """
+
+        params = {"symbol":"DOGEBUSD",
+                  "type":"LIMIT",
+                  "side":"BUY",
+                  "price":price,
+                  "quantity":int(quot),
+                  "timeInForce":"GTC"}
+
+
+        LongPos = client.futures_create_order(**params)
             
         """
         client.futures_cancel_all_open_orders(**{"symbol":"DOGEBUSD"})
@@ -111,27 +111,27 @@ def webhook():
 
         markPrice = float(client.futures_mark_price(symbol="DOGEBUSD")["markPrice"])
         price = price = get_rounded_price(price*100.1/100)
-        for i in range(99,48,-5):
-        
-            quot = math.floor((balance/markPrice)*(i/100)*1000*lev)/1000
-            
-            """
-            params = {"symbol":"DOGEBUSD",
-                    "type":"MARKET",
-                    "side":"SELL",
-                    "quantity":int(quot),
-                    "reduceOnly":"false"}
-            """
-            
-            params = {"symbol":"DOGEBUSD",
-                "type":"LIMIT",
-                "side":"SELL",
-                "price":price,
-                "quantity":int(quot),
-                "timeInForce":"GTC"}
-            
 
-            ShortPos = client.futures_create_order(**params)
+        
+        quot = math.floor((balance/markPrice)*(80/100)*1000*lev)/1000
+
+        """
+        params = {"symbol":"DOGEBUSD",
+                "type":"MARKET",
+                "side":"SELL",
+                "quantity":int(quot),
+                "reduceOnly":"false"}
+        """
+
+        params = {"symbol":"DOGEBUSD",
+            "type":"LIMIT",
+            "side":"SELL",
+            "price":price,
+            "quantity":int(quot),
+            "timeInForce":"GTC"}
+
+
+        ShortPos = client.futures_create_order(**params)
         
         """
         client.futures_cancel_all_open_orders(**{"symbol":"DOGEBUSD"})
