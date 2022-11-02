@@ -1,7 +1,8 @@
 from flask import Flask, request
 import json
 from binance.client import Client
-import math 
+import math
+from binance.helpers import round_step_size
 
 
 app = Flask(__name__)
@@ -9,14 +10,20 @@ app = Flask(__name__)
 
 @app.route("/webhook", methods=['POST'])
 def webhook():
-    def get_min_quant():
+    
+    def get_tick_size():
         info = client.futures_exchange_info()
-        for item in info['symbols']:
-            if(item['symbol'] == "DOGEBUSD"):
-                for f in item['filters']:
-                    if f['filterType'] == 'LOT_SIZE':
-                        return f['minQty']
 
+        for symbol_info in info['symbols']:
+            if symbol_info['symbol'] == "DOGEBUSD":
+                for symbol_filter in symbol_info['filters']:
+                    if symbol_filter['filterType'] == 'PRICE_FILTER':
+                        return float(symbol_filter['tickSize'])
+
+
+    def get_rounded_price(price):
+        return round_step_size(price, get_tick_size(symbol))
+    
 
     def LongPosition(client,lev,price):
         try:
@@ -35,7 +42,7 @@ def webhook():
             balance = float(asset["balance"])
 
         markPrice = float(client.futures_mark_price(symbol="DOGEBUSD")["markPrice"])
-        
+        price = price = get_rounded_price(price*99.9/100)
         for i in range(99,48,-5):
             
             quot = math.floor((balance/markPrice)*(i/100)*1000*lev)/1000
@@ -48,7 +55,7 @@ def webhook():
                     "reduceOnly":"false"} 
             """
             tick = get_ticksize(cur)
-            price = round_step_size(float(price*99.9/100), float(tick))
+            
             params = {"symbol":"DOGEBUSD",
                       "type":"LIMIT",
                       "side":"BUY",
@@ -104,7 +111,7 @@ def webhook():
             balance = float(asset["balance"])
 
         markPrice = float(client.futures_mark_price(symbol="DOGEBUSD")["markPrice"])
-        
+        price = price = get_rounded_price(price*100.1/100)
         for i in range(99,48,-5):
         
             quot = math.floor((balance/markPrice)*(i/100)*1000*lev)/1000
@@ -116,8 +123,6 @@ def webhook():
                     "quantity":int(quot),
                     "reduceOnly":"false"}
             """
-            tick = get_ticksize(cur)
-            price = round_step_size(float(price*100.1/100), float(tick))
             
             params = {"symbol":"DOGEBUSD",
                 "type":"LIMIT",
