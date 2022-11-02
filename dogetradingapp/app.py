@@ -54,8 +54,7 @@ def webhook():
                     "quantity":int(quot),
                     "reduceOnly":"false"} 
             """
-            tick = get_ticksize(cur)
-            
+                
             params = {"symbol":"DOGEBUSD",
                       "type":"LIMIT",
                       "side":"BUY",
