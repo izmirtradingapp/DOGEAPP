@@ -82,7 +82,7 @@ def webhook():
             
     def ExitLongPosition(client):
         client.futures_cancel_all_open_orders(**{"symbol":"DOGEBUSD"})
-        qty = client.futures_position_information(symbol="DOGEBUSD")[0]["positionAmt"]
+        qty = int(client.futures_position_information(symbol="DOGEBUSD")[0]["positionAmt"])
         params = {
             "symbol":"DOGEBUSD",
             "side":"SELL",
@@ -149,7 +149,7 @@ def webhook():
 
     def ExitShortPosition(client):
         client.futures_cancel_all_open_orders(**{"symbol":"DOGEBUSD"})
-        qty = -(client.futures_position_information(symbol="DOGEBUSD")[0]["positionAmt"])
+        qty = -(int(client.futures_position_information(symbol="DOGEBUSD")[0]["positionAmt"]))
         params = {
             "symbol":"DOGEBUSD",
             "side":"BUY",
