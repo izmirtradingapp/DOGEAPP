@@ -25,7 +25,7 @@ def webhook():
         return round_step_size(price, get_tick_size())
     
 
-    def LongPosition(client,lev,price):
+    def LongPosition(client,lev):
         try:
             ExitShortPosition(client)
         except:
@@ -42,26 +42,25 @@ def webhook():
             balance = float(asset["balance"])
 
         markPrice = float(client.futures_mark_price(symbol="DOGEBUSD")["markPrice"])
-        price = price = get_rounded_price(price*99.9/100)
+        #price = get_rounded_price(price*99.9/100)
        
             
         quot = math.floor((balance/markPrice)*(80/100)*1000*lev)/1000
 
-        """
+        
         params = {"symbol":"DOGEBUSD",
                 "type":"MARKET",
                 "side":"BUY",
                 "quantity":int(quot),
                 "reduceOnly":"false"} 
         """
-
         params = {"symbol":"DOGEBUSD",
                   "type":"LIMIT",
                   "side":"BUY",
                   "price":price,
                   "quantity":int(quot),
                   "timeInForce":"GTC"}
-
+        """
 
         LongPos = client.futures_create_order(**params)
             
@@ -93,7 +92,7 @@ def webhook():
         ExitLong = client.futures_create_order(**params)
 
 
-    def ShortPosition(client,lev,price):
+    def ShortPosition(client,lev):
         try:
             ExitLongPosition(client)
         except:
@@ -110,26 +109,25 @@ def webhook():
             balance = float(asset["balance"])
 
         markPrice = float(client.futures_mark_price(symbol="DOGEBUSD")["markPrice"])
-        price = price = get_rounded_price(price*100.1/100)
+        #price = price = get_rounded_price(price*100.1/100)
 
         
         quot = math.floor((balance/markPrice)*(80/100)*1000*lev)/1000
 
-        """
+        
         params = {"symbol":"DOGEBUSD",
                 "type":"MARKET",
                 "side":"SELL",
                 "quantity":int(quot),
                 "reduceOnly":"false"}
         """
-
         params = {"symbol":"DOGEBUSD",
             "type":"LIMIT",
             "side":"SELL",
             "price":price,
             "quantity":int(quot),
             "timeInForce":"GTC"}
-
+        """
 
         ShortPos = client.futures_create_order(**params)
         
@@ -185,7 +183,7 @@ def webhook():
         data = json.loads(request.data)
         order = data["order"]
         lev = data["leverage"]
-        price = float(data["price"])
+        #price = float(data["price"])
         #fark = float(data["fark"])
         api_key = data["api_key"]
         api_secret = data["api_secret"]
@@ -194,13 +192,13 @@ def webhook():
         client.futures_change_leverage(**{"symbol":"DOGEBUSD","leverage":lev})
 
         if order == "LongPosition":
-            LongPosition(client,lev,price)
+            LongPosition(client,lev)
 
         elif order == "ExitLongPosition":
             ExitLongPosition(client)
           
         elif order == "ShortPosition":
-            ShortPosition(client,lev,price)
+            ShortPosition(client,lev)
 
         elif order == "ExitShortPosition":
             ExitShortPosition(client)
