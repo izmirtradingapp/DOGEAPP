@@ -22,7 +22,7 @@ def webhook():
 
 
     def get_rounded_price(price):
-        return round_step_size(price, get_tick_size(symbol))
+        return round_step_size(price, get_tick_size())
     
 
     def LongPosition(client,lev,price):
