@@ -9,6 +9,14 @@ app = Flask(__name__)
 
 @app.route("/webhook", methods=['POST'])
 def webhook():
+    def get_min_quant():
+        info = client.futures_exchange_info()
+        for item in info['symbols']:
+            if(item['symbol'] == "DOGEBUSD"):
+                for f in item['filters']:
+                    if f['filterType'] == 'LOT_SIZE':
+                        return f['minQty']
+
 
     def LongPosition(client,lev,price):
         try:
@@ -39,10 +47,12 @@ def webhook():
                     "quantity":int(quot),
                     "reduceOnly":"false"} 
             """
+            tick = get_ticksize(cur)
+            price = round_step_size(float(price*99.9/100), float(tick))
             params = {"symbol":"DOGEBUSD",
                       "type":"LIMIT",
                       "side":"BUY",
-                      "price":price*99.9/100,
+                      "price":price,
                       "quantity":int(quot),
                       "timeInForce":"GTC"}
            
@@ -106,10 +116,13 @@ def webhook():
                     "quantity":int(quot),
                     "reduceOnly":"false"}
             """
+            tick = get_ticksize(cur)
+            price = round_step_size(float(price*100.1/100), float(tick))
+            
             params = {"symbol":"DOGEBUSD",
                 "type":"LIMIT",
                 "side":"SELL",
-                "price":price*100.1/100,
+                "price":price,
                 "quantity":int(quot),
                 "timeInForce":"GTC"}
             
