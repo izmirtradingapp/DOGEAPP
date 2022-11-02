@@ -10,7 +10,7 @@ app = Flask(__name__)
 @app.route("/webhook", methods=['POST'])
 def webhook():
 
-    def LongPosition(client,lev):
+    def LongPosition(client,lev,price):
         try:
             ExitShortPosition(client)
         except:
@@ -28,24 +28,11 @@ def webhook():
 
         markPrice = float(client.futures_mark_price(symbol="DOGEBUSD")["markPrice"])
         
-        for i in range(4):
+        for i in range(99,48,-5):
             
-            if i == 0:
-                quot = math.floor((balance/markPrice)*(90/100)*1000*lev)/1000
+            quot = math.floor((balance/markPrice)*(i/100)*1000*lev)/1000
             
-            if i == 1:
-                quot = math.floor((balance/markPrice)*(80/100)*1000*lev)/1000
-                
-            if i == 2:
-                quot = math.floor((balance/markPrice)*(70/100)*1000*lev)/1000
-                
-            if i == 3:
-                quot = math.floor((balance/markPrice)*(60/100)*1000*lev)/1000
-            
-            if i == 4:
-                quot = math.floor((balance/markPrice)*(50/100)*1000*lev)/1000
-            
-            
+            """
             params = {"symbol":"DOGEBUSD",
                     "type":"MARKET",
                     "side":"BUY",
@@ -55,10 +42,10 @@ def webhook():
             params = {"symbol":"DOGEBUSD",
                       "type":"LIMIT",
                       "side":"BUY",
-                      "price":price-fark,
+                      "price":price*99.9/100,
                       "quantity":quot,
                       "timeInForce":"GTC"}
-            """
+           
 
             LongPos = client.futures_create_order(**params)
             
@@ -90,7 +77,7 @@ def webhook():
         ExitLong = client.futures_create_order(**params)
 
 
-    def ShortPosition(client,lev):
+    def ShortPosition(client,lev,price):
         try:
             ExitLongPosition(client)
         except:
@@ -108,25 +95,11 @@ def webhook():
 
         markPrice = float(client.futures_mark_price(symbol="DOGEBUSD")["markPrice"])
         
-        for i in range(4):
+        for i in range(99,48,-5):
         
-            if i == 0:
-                quot = math.floor((balance/markPrice)*(90/100)*1000*lev)/1000
+            quot = math.floor((balance/markPrice)*(i/100)*1000*lev)/1000
             
-            if i == 1:
-                quot = math.floor((balance/markPrice)*(80/100)*1000*lev)/1000
-                
-            if i == 2:
-                quot = math.floor((balance/markPrice)*(70/100)*1000*lev)/1000
-                
-            if i == 3:
-                quot = math.floor((balance/markPrice)*(60/100)*1000*lev)/1000
-                
-            if i == 4:
-                quot = math.floor((balance/markPrice)*(50/100)*1000*lev)/1000
-            
-            
-            
+            """
             params = {"symbol":"DOGEBUSD",
                     "type":"MARKET",
                     "side":"SELL",
@@ -136,10 +109,10 @@ def webhook():
             params = {"symbol":"DOGEBUSD",
                 "type":"LIMIT",
                 "side":"SELL",
-                "price":price+fark,
+                "price":price*100.1/100,
                 "quantity":quot,
                 "timeInForce":"GTC"}
-            """
+            
 
             ShortPos = client.futures_create_order(**params)
         
@@ -195,7 +168,7 @@ def webhook():
         data = json.loads(request.data)
         order = data["order"]
         lev = data["leverage"]
-        #price = float(data["price"])
+        price = float(data["price"])
         #fark = float(data["fark"])
         api_key = data["api_key"]
         api_secret = data["api_secret"]
@@ -204,13 +177,13 @@ def webhook():
         client.futures_change_leverage(**{"symbol":"DOGEBUSD","leverage":lev})
 
         if order == "LongPosition":
-            LongPosition(client,lev)
+            LongPosition(client,lev,price)
 
         elif order == "ExitLongPosition":
             ExitLongPosition(client)
           
         elif order == "ShortPosition":
-            ShortPosition(client,lev)
+            ShortPosition(client,lev,price)
 
         elif order == "ExitShortPosition":
             ExitShortPosition(client)
