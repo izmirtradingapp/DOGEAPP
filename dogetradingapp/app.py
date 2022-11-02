@@ -43,7 +43,7 @@ def webhook():
                       "type":"LIMIT",
                       "side":"BUY",
                       "price":price*99.9/100,
-                      "quantity":quot,
+                      "quantity":int(quot),
                       "timeInForce":"GTC"}
            
 
@@ -110,7 +110,7 @@ def webhook():
                 "type":"LIMIT",
                 "side":"SELL",
                 "price":price*100.1/100,
-                "quantity":quot,
+                "quantity":int(quot),
                 "timeInForce":"GTC"}
             
 
